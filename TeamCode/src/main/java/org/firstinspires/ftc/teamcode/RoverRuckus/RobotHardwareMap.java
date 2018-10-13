@@ -22,8 +22,10 @@ public class RobotHardwareMap {
     public Servo BackLeftServo = null;
     public Servo BackRightServo = null;
 
-    public DcMotor LiftMotorOne = null;
-    public DcMotor LiftMotorTwo = null;
+    //public DcMotor InfeedMotor = null;
+
+    //public DcMotor LiftMotorOne = null;
+    //public DcMotor LiftMotorTwo = null;
 
     /* local members */
     HardwareMap hwMap = null;
@@ -42,8 +44,10 @@ public class RobotHardwareMap {
         BackLeftMotor = initMotor("BackLeftMotor", DcMotorSimple.Direction.FORWARD);
         BackRightMotor = initMotor("BackRightMotor", DcMotorSimple.Direction.FORWARD);
 
-        LiftMotorOne = initMotor("LiftMotorOne", DcMotorSimple.Direction.FORWARD);
-        LiftMotorTwo = initMotor("LiftMotorTwo", DcMotorSimple.Direction.FORWARD);
+        //LiftMotorOne = initMotor("LiftMotorOne", DcMotorSimple.Direction.FORWARD);
+        //LiftMotorTwo = initMotor("LiftMotorTwo", DcMotorSimple.Direction.FORWARD);
+
+        //InfeedMotor = initMotor("InfeedMotor", DcMotorSimple.Direction.FORWARD);
 
         FrontLeftServo = initServo("FrontLeftServo", .5, Direction.FORWARD);
         FrontRightServo = initServo("FrontRightServo", .5, Direction.FORWARD);
@@ -53,16 +57,34 @@ public class RobotHardwareMap {
     }
 
     public DcMotor initMotor(String hardwareName, DcMotorSimple.Direction direction) {
-        DcMotor motor = hwMap.dcMotor.get(hardwareName);
-        if (motor == null) {telemetry.addData("error", hardwareName + "not found"); return null;}
-        motor.setDirection(direction);
-        motor.setPower(0.0);
-        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        return motor;
+        DcMotor motor = null;
+        try {
+            motor = hwMap.dcMotor.get(hardwareName);
+        }
+        catch (Exception a)
+        {
+
+        }
+            if (motor == null) {
+                telemetry.addData("error", hardwareName + "not found");
+                return null;
+            }
+            motor.setDirection(direction);
+            motor.setPower(0.0);
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            return motor;
+
     }
 
     public Servo initServo(String hardwareName, double initalPos, Direction direction) {
-        Servo servo = hwMap.servo.get(hardwareName);
+        Servo servo = null;
+        try {
+            servo = hwMap.servo.get(hardwareName);
+        }
+        catch (Exception b)
+        {
+
+        }
         if (servo == null) {
             telemetry.addData("error", hardwareName + "not found");
             return null;
