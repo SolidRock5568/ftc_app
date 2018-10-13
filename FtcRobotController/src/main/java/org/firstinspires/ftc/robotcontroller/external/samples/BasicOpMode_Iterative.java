@@ -95,6 +95,9 @@ public class BasicOpMode_Iterative extends OpMode
     public void start() {
         runtime.reset();
     }
+    {
+
+    }
 
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
