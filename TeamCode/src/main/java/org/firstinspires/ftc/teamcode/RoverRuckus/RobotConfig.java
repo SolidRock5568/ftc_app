@@ -46,17 +46,42 @@ public class RobotConfig extends RobotHardwareMap
         SetServoPositions(Strafe);
     }
 
-    //This function takes a value between 0 and 1 and adjusts it to be
-    //between the min value and the max value
-    public double ScaleValue(double value, double min, double max) {
+
+    /**
+     * This function takes a value between 0 and 1 and adjusts it to be
+     * between the min value and the max value
+     * @param value Value to be unscaled
+     * @param min Minimum value to be returned
+     * @param max Maximum value to be returned
+     * @return Returns the unscaled value between min and max
+     */
+    public double UnScaleValue(double value, double min, double max) {
         return (value * (max - min) + max);
 
     }
+
+    /**
+     * This function takes a value between min and max and adjusts it to be
+     * between 0 and 1
+     * @param value Value to be scaled
+     * @param min Minimum value to be used
+     * @param max Maximum value to be used
+     * @return Returns a value between 0 and 1 scaled between min and max
+     */
+    public double ScaleValue(double value, double min, double max){
+        return ((value - min)/(max - min));
+    }
+
     public void SetServoPositions(double angle) {
-        FrontLeftServo.setPosition(ScaleValue(angle, FrontLeftMax, FrontLeftMin));
-        FrontRightServo.setPosition(ScaleValue(angle, FrontRightMax, FrontRightMin));
-        BackLeftServo.setPosition(ScaleValue(angle, BackLeftMax, BackLeftMin));
-        BackRightServo.setPosition(ScaleValue(angle, BackRightMax, BackRightMin));
+        //We first have to scale our input value (joystick from -1 to 1) to a value between
+        //0 and 1
+        double scaledAngle = ScaleValue(angle, -1, 1);
+
+        //Next we have to Unscale our 0 to 1 value to each servo's min to max value
+        FrontLeftServo.setPosition(UnScaleValue(scaledAngle, FrontLeftMin, FrontLeftMax));
+        FrontRightServo.setPosition(UnScaleValue(scaledAngle, FrontRightMin, FrontRightMax));
+        BackLeftServo.setPosition(UnScaleValue(scaledAngle, BackLeftMin, BackLeftMax));
+        BackRightServo.setPosition(UnScaleValue(scaledAngle, BackRightMin, BackRightMax));
     }
 
     public void SetLiftMotors(double liftPower) {
