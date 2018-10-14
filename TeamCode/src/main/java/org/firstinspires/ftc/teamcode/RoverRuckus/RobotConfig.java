@@ -5,15 +5,16 @@ import static com.qualcomm.robotcore.util.Range.clip;
 
 public class RobotConfig extends RobotHardwareMap
 {
-    double FrontLeftMin = 0;
-    double FrontRightMin = 0.02;
-    double BackLeftMin = 0.01;
-    double BackRightMin = 0.03;
+    //These are the value to use for each module to get that module to the zero degree
+    private double FrontLeftMin = 0;
+    private double FrontRightMin = 0.02;
+    private double BackLeftMin = 0.01;
+    private double BackRightMin = 0.03;
 
-    double FrontLeftMax = 1;
-    double FrontRightMax = 0.76;
-    double BackLeftMax = 0.70;
-    double BackRightMax = 0.79;
+    private double FrontLeftMax = 1;
+    private double FrontRightMax = 0.76;
+    private double BackLeftMax = 0.70;
+    private double BackRightMax = 0.79;
 
     public void InitServos(){
         SetServoPositions(0);
