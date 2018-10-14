@@ -38,15 +38,15 @@ public class TeleopConfig extends RobotHardwareMap
     }
 
     public void SetServoPositions(double angle) {
-        double FrontLeftOffset = 0;
-        double FrontRightOffset = 0;
-        double BackLeftOffset = 0;
+        double FrontLeftOffset = 1;
+        double FrontRightOffset = 0.02;
+        double BackLeftOffset = 0.01;
         double BackRightOffset = 0;
 
         double FrontLeftMax = 1;
-        double FrontRightMax = 1;
-        double BackLeftMax = 1;
-        double BackRightMax = 1;
+        double FrontRightMax = 0.76;
+        double BackLeftMax = 0.70;
+        double BackRightMax = 0.79;
 
         FrontLeftServo.setPosition(clip(angle, FrontLeftOffset, FrontLeftMax));
         FrontRightServo.setPosition(clip(angle, FrontRightOffset, FrontRightMax));
