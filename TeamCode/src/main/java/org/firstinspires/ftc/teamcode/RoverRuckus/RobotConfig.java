@@ -46,11 +46,17 @@ public class RobotConfig extends RobotHardwareMap
         SetServoPositions(Strafe);
     }
 
+    //This function takes a value between 0 and 1 and adjusts it to be
+    //between the min value and the max value
+    public double ScaleValue(double value, double min, double max) {
+        return (value * (max - min) + max);
+
+    }
     public void SetServoPositions(double angle) {
-        FrontLeftServo.setPosition(angle * (FrontLeftMax - FrontLeftMin));
-        FrontRightServo.setPosition(angle * (FrontRightMax - FrontRightMin));
-        BackLeftServo.setPosition(angle * (BackLeftMax - BackLeftMin));
-        BackRightServo.setPosition(angle * (BackRightMax - BackRightMin));
+        FrontLeftServo.setPosition(ScaleValue(angle, FrontLeftMax, FrontLeftMin));
+        FrontRightServo.setPosition(ScaleValue(angle, FrontRightMax, FrontRightMin));
+        BackLeftServo.setPosition(ScaleValue(angle, BackLeftMax, BackLeftMin));
+        BackRightServo.setPosition(ScaleValue(angle, BackRightMax, BackRightMin));
     }
 
     public void SetLiftMotors(double liftPower) {
