@@ -58,8 +58,7 @@ public class RobotConfig extends RobotHardwareMap
     public double UnScaleValue(double value, double min, double max) {
         return (value * (max - min) + max);
     }
-
-<<<<<<< HEAD
+    
     /**
      * This function takes a value between min and max and adjusts it to be
      * between 0 and 1
@@ -72,8 +71,6 @@ public class RobotConfig extends RobotHardwareMap
         return ((value - min)/(max - min));
     }
 
-=======
->>>>>>> 1317193f9c5d22c8bbc7bae7ace04104ff3ac8a2
     public void SetServoPositions(double angle) {
         //We first have to scale our input value (joystick from -1 to 1) to a value between
         //0 and 1
