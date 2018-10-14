@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.RoverRuckus;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.Servo.Direction;
 
@@ -38,7 +37,7 @@ public class RobotHardwareMap {
         // Save a reference to Telemetry instance
         this.telemetry = telemetry;
 
-        // Get and initalize the motors
+        // Get and initialize the motors
         FrontLeftMotor = initMotor("FrontLeftMotor", DcMotorSimple.Direction.FORWARD);
         FrontRightMotor = initMotor("FrontRightMotor", DcMotorSimple.Direction.FORWARD);
         BackLeftMotor = initMotor("BackLeftMotor", DcMotorSimple.Direction.FORWARD);
@@ -57,14 +56,7 @@ public class RobotHardwareMap {
     }
 
     public DcMotor initMotor(String hardwareName, DcMotorSimple.Direction direction) {
-        DcMotor motor = null;
-        try {
-            motor = hwMap.dcMotor.get(hardwareName);
-        }
-        catch (Exception a)
-        {
-
-        }
+        DcMotor motor = hwMap.dcMotor.get(hardwareName);
             if (motor == null) {
                 telemetry.addData("error", hardwareName + "not found");
                 return null;
@@ -77,14 +69,7 @@ public class RobotHardwareMap {
     }
 
     public Servo initServo(String hardwareName, double initalPos, Direction direction) {
-        Servo servo = null;
-        try {
-            servo = hwMap.servo.get(hardwareName);
-        }
-        catch (Exception b)
-        {
-
-        }
+        Servo servo = hwMap.servo.get(hardwareName);
         if (servo == null) {
             telemetry.addData("error", hardwareName + "not found");
             return null;
