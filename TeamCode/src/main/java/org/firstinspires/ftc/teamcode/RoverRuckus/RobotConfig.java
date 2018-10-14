@@ -50,8 +50,8 @@ public class RobotConfig extends RobotHardwareMap
     //between the min value and the max value
     public double ScaleValue(double value, double min, double max) {
         return (value * (max - min) + max);
-
     }
+
     public void SetServoPositions(double angle) {
         FrontLeftServo.setPosition(ScaleValue(angle, FrontLeftMax, FrontLeftMin));
         FrontRightServo.setPosition(ScaleValue(angle, FrontRightMax, FrontRightMin));
@@ -70,13 +70,13 @@ public class RobotConfig extends RobotHardwareMap
     }
 
     public void SetLeftDriveMotors(double leftPower) {
-        FrontLeftMotor.setPower(leftPower);
-        BackLeftMotor.setPower(leftPower);
+        FrontLeftMotor.setPower(clip(leftPower, -1, 1));
+        BackLeftMotor.setPower(clip(leftPower, -1, 1));
     }
 
     public void SetRightDriveMotors(double rightPower) {
-        FrontRightMotor.setPower(rightPower);
-        BackRightMotor.setPower(rightPower);
+        FrontRightMotor.setPower(clip(rightPower, -1, 1));
+        BackRightMotor.setPower(clip(rightPower, -1, 1));
     }
 
     public void InfeedIn() {
