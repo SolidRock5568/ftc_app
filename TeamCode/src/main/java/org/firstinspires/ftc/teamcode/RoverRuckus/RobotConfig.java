@@ -1,15 +1,14 @@
 package org.firstinspires.ftc.teamcode.RoverRuckus;
 
-import com.qualcomm.robotcore.util.Range;
 import static com.qualcomm.robotcore.util.Range.clip;
 
 
 public class RobotConfig extends RobotHardwareMap
 {
-    double FrontLeftOffset = 1;
-    double FrontRightOffset = 0.02;
-    double BackLeftOffset = 0.01;
-    double BackRightOffset = 0;
+    double FrontLeftMin = 0;
+    double FrontRightMin = 0.02;
+    double BackLeftMin = 0.01;
+    double BackRightMin = 0.03;
 
     double FrontLeftMax = 1;
     double FrontRightMax = 0.76;
@@ -47,10 +46,10 @@ public class RobotConfig extends RobotHardwareMap
     }
 
     public void SetServoPositions(double angle) {
-        FrontLeftServo.setPosition(angle * (FrontLeftMax - FrontLeftOffset));
-        FrontRightServo.setPosition(angle * (FrontRightMax - FrontRightOffset));
-        BackLeftServo.setPosition(angle * (BackLeftMax - BackLeftOffset));
-        BackRightServo.setPosition(angle * (BackRightMax - BackRightOffset));
+        FrontLeftServo.setPosition(angle * (FrontLeftMax - FrontLeftMin));
+        FrontRightServo.setPosition(angle * (FrontRightMax - FrontRightMin));
+        BackLeftServo.setPosition(angle * (BackLeftMax - BackLeftMin));
+        BackRightServo.setPosition(angle * (BackRightMax - BackRightMin));
     }
 
     public void SetLiftMotors(double liftPower) {

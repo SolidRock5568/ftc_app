@@ -16,7 +16,7 @@ public class TeleopTest extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    TeleopConfig robot = new TeleopConfig();
+    RobotConfig robot = new RobotConfig();
 
     double angle = 0;
     double adjustment = 0.1;
