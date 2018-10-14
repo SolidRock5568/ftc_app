@@ -1,12 +1,21 @@
 package org.firstinspires.ftc.teamcode.RoverRuckus;
 
 import com.qualcomm.robotcore.util.Range;
-
 import static com.qualcomm.robotcore.util.Range.clip;
 
 
-public class TeleopConfig extends RobotHardwareMap
+public class RobotConfig extends RobotHardwareMap
 {
+    double FrontLeftOffset = 1;
+    double FrontRightOffset = 0.02;
+    double BackLeftOffset = 0.01;
+    double BackRightOffset = 0;
+
+    double FrontLeftMax = 1;
+    double FrontRightMax = 0.76;
+    double BackLeftMax = 0.70;
+    double BackRightMax = 0.79;
+
     public void InitServos(){
         SetServoPositions(0);
     }
@@ -38,20 +47,10 @@ public class TeleopConfig extends RobotHardwareMap
     }
 
     public void SetServoPositions(double angle) {
-        double FrontLeftOffset = 1;
-        double FrontRightOffset = 0.02;
-        double BackLeftOffset = 0.01;
-        double BackRightOffset = 0;
-
-        double FrontLeftMax = 1;
-        double FrontRightMax = 0.76;
-        double BackLeftMax = 0.70;
-        double BackRightMax = 0.79;
-
-        FrontLeftServo.setPosition(clip(angle, FrontLeftOffset, FrontLeftMax));
-        FrontRightServo.setPosition(clip(angle, FrontRightOffset, FrontRightMax));
-        BackLeftServo.setPosition(clip(angle, BackLeftOffset, BackLeftMax));
-        BackRightServo.setPosition(clip(angle, BackRightOffset, BackRightMax));
+        FrontLeftServo.setPosition(angle * (FrontLeftMax - FrontLeftOffset));
+        FrontRightServo.setPosition(angle * (FrontRightMax - FrontRightOffset));
+        BackLeftServo.setPosition(angle * (BackLeftMax - BackLeftOffset));
+        BackRightServo.setPosition(angle * (BackRightMax - BackRightOffset));
     }
 
     public void SetLiftMotors(double liftPower) {

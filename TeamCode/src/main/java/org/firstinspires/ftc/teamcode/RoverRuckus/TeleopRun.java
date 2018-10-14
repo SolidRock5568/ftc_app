@@ -13,7 +13,7 @@ public class TeleopRun extends OpMode
     {
         // Declare OpMode members.
         private ElapsedTime runtime = new ElapsedTime();
-        TeleopConfig robot = new TeleopConfig();
+        RobotConfig robot = new RobotConfig();
 
         /*
          * Code to run ONCE when the driver hits INIT
