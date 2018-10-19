@@ -1,23 +1,29 @@
 package org.firstinspires.ftc.teamcode.RoverRuckus;
 
+import com.qualcomm.robotcore.hardware.Gamepad;
+
 import static com.qualcomm.robotcore.util.Range.clip;
 
 
 public class RobotConfig extends RobotHardwareMap
 {
     //These are the value to use for each module to get that module to the zero degree
-    private double FrontLeftMin = 0;
+    public double FrontLeftMin = 0.05;
     private double FrontRightMin = 0.02;
     private double BackLeftMin = 0.01;
     private double BackRightMin = 0.03;
 
-    private double FrontLeftMax = 1;
+    public double FrontLeftMax = 0.69;
     private double FrontRightMax = 0.76;
     private double BackLeftMax = 0.70;
     private double BackRightMax = 0.79;
 
     public void InitServos(){
-        SetServoPositions(0);
+        FrontLeftServo.setPosition(FrontLeftMin);
+        FrontRightServo.setPosition(FrontRightMin);
+        BackLeftServo.setPosition(BackLeftMin);
+        BackRightServo.setPosition(BackRightMin);
+
     }
 
     public void KillMotors(){
@@ -41,8 +47,8 @@ public class RobotConfig extends RobotHardwareMap
     }
 
     public void SwerveDrive(double Power, double Strafe, double Steer){
-        SetLeftDriveMotors(Power - Steer);
-        SetRightDriveMotors(Power + Steer);
+        SetLeftDriveMotors(Power + Steer);
+        SetRightDriveMotors(Power - Steer);
         SetServoPositions(Strafe);
     }
 
@@ -56,7 +62,7 @@ public class RobotConfig extends RobotHardwareMap
      * @return Returns the unscaled value between min and max
      */
     public double UnScaleValue(double value, double min, double max) {
-        return (value * (max - min) + max);
+        return (value * (max - min) + min);
     }
     
     /**

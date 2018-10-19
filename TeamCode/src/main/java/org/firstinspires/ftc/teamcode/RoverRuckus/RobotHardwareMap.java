@@ -31,7 +31,7 @@ public class RobotHardwareMap {
     Telemetry telemetry = null;
 
     public void init(HardwareMap ahwMap, Telemetry telemetry) {
-        // Save a reference to Hardware map
+        //Save a reference to Hardware map
         hwMap = ahwMap;
 
         // Save a reference to Telemetry instance
@@ -48,10 +48,10 @@ public class RobotHardwareMap {
 
         //InfeedMotor = initMotor("InfeedMotor", DcMotorSimple.Direction.FORWARD);
 
-        FrontLeftServo = initServo("FrontLeftServo", .5, Direction.FORWARD);
-        FrontRightServo = initServo("FrontRightServo", .5, Direction.FORWARD);
-        BackLeftServo = initServo("BackLeftServo", .5, Direction.FORWARD);
-        BackRightServo = initServo("BackRightServo", .5, Direction.FORWARD);
+        FrontLeftServo = initServo("FrontLeftServo", Direction.FORWARD);
+        FrontRightServo = initServo("FrontRightServo", Direction.FORWARD);
+        BackLeftServo = initServo("BackLeftServo", Direction.FORWARD);
+        BackRightServo = initServo("BackRightServo", Direction.FORWARD);
 
     }
 
@@ -68,14 +68,13 @@ public class RobotHardwareMap {
 
     }
 
-    public Servo initServo(String hardwareName, double initalPos, Direction direction) {
+    public Servo initServo(String hardwareName, Direction direction) {
         Servo servo = hwMap.servo.get(hardwareName);
         if (servo == null) {
             telemetry.addData("error", hardwareName + "not found");
             return null;
         }
         servo.setDirection(direction);
-        servo.setPosition(initalPos);
         return servo;
     }
 }

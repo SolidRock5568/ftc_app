@@ -4,8 +4,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @TeleOp(name="TeleopRun", group="RoverRuckus")
 //@Disabled
@@ -14,11 +17,13 @@ public class TeleopRun extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
     RobotConfig robot = new RobotConfig();
 
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
+        robot.init(hardwareMap, telemetry);
         robot.InitServos();
         robot.KillMotors();
         robot.UpdateTelemetry();
@@ -49,6 +54,10 @@ public class TeleopRun extends OpMode {
         //gamepad1.left_stick_x is the strafe left and right joystick
         //gamepad1.right_stick_x is the turn left and turn right joystick
         robot.SwerveDrive(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+        telemetry.addData("Joystick: ", gamepad1.left_stick_x);
+        telemetry.addData("Scaled Angle: ", robot.ScaleValue(gamepad1.left_stick_x, -1, 1));
+        telemetry.addData("FL Unscaled Scaled Angle", robot.UnScaleValue(robot.ScaleValue(gamepad1.left_stick_x, -1, 1), robot.FrontLeftMin, robot.FrontLeftMax));
+
         robot.UpdateTelemetry();
     }
 
