@@ -42,7 +42,7 @@ public class RobotConfig extends RobotHardwareMap
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
      * localization engine.
      */
-    VuforiaLocalizer vuforia;
+    public VuforiaLocalizer vuforia;
 
     //These are the value to use for each module to get that module to the zero degree
     public double FrontLeftMin = 0.05;
@@ -78,17 +78,25 @@ public class RobotConfig extends RobotHardwareMap
         // Load the data sets that for the trackable objects. These particular data
         // sets are stored in the 'assets' part of our application.
         targetsRoverRuckus = this.vuforia.loadTrackablesFromAsset("RoverRuckus");
+
+        // Gets and sets the name of the "Blue Rover" trackable
         VuforiaTrackable blueRover = targetsRoverRuckus.get(0);
         blueRover.setName("Blue-Rover");
+
+        // Gets and sets the name of the "Red Footprint" trackable
         VuforiaTrackable redFootprint = targetsRoverRuckus.get(1);
         redFootprint.setName("Red-Footprint");
+
+        // Gets and sets the name of the "Front Craters" trackable
         VuforiaTrackable frontCraters = targetsRoverRuckus.get(2);
         frontCraters.setName("Front-Craters");
+
+        // Gets and sets the name of the "Back Space" trackable
         VuforiaTrackable backSpace = targetsRoverRuckus.get(3);
         backSpace.setName("Back-Space");
 
         // For convenience, gather together all the trackable objects in one easily-iterable collection */
-        allTrackables = new ArrayList<VuforiaTrackable>();
+        allTrackables = new ArrayList<>();
         allTrackables.addAll(targetsRoverRuckus);
 
         OpenGLMatrix blueRoverLocationOnField = OpenGLMatrix
@@ -130,20 +138,23 @@ public class RobotConfig extends RobotHardwareMap
     public String VuforiaRun(){
         int counter = 0;
         String ReturnValue = "";
+        VuforiaTrackableDefaultListener trackableDefaultListener;
         targetsRoverRuckus.activate();
         if (counter <= 100) {
             // check all the trackable target to see which one (if any) is visible.
             targetVisible = false;
             for (VuforiaTrackable trackable : allTrackables) {
-                if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
+                trackableDefaultListener = (VuforiaTrackableDefaultListener)trackable.getListener();
+                if (trackableDefaultListener.isVisible()) {
                     targetVisible = true;
                     ReturnValue = trackable.getName();
                     // getUpdatedRobotLocation() will return null if no new information is available since
                     // the last time that call was made, or if the trackable is not currently visible.
-                    OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener) trackable.getListener()).getUpdatedRobotLocation();
+                    OpenGLMatrix robotLocationTransform = trackableDefaultListener.getUpdatedRobotLocation();
                     if (robotLocationTransform != null) {
                         lastLocation = robotLocationTransform;
                     }
+
                     break;
                 }
             }
@@ -218,22 +229,22 @@ public class RobotConfig extends RobotHardwareMap
 
         double L = 10.8947877002801;
         double W = 13.21;
-        double R = Math.sqrt(Math.pow(L, 2)+ Math.pow(W, 2));
+        double R = Math.sqrt(Math.pow(L, 2) + Math.pow(W, 2));
 
-        double A = STR - RCW*(L/R);
-        double B = STR + RCW*(L/R);
-        double C = FWD - RCW*(W/R);
-        double D = FWD + RCW*(W/R);
+        double A = STR - RCW * (L/R);
+        double B = STR + RCW * (L/R);
+        double C = FWD - RCW * (W/R);
+        double D = FWD + RCW * (W/R);
 
-        double ws1 = Math.sqrt(Math.pow(B, 2)+Math.pow(C, 2));
-        double ws2 = Math.sqrt(Math.pow(B, 2)+Math.pow(D, 2));
-        double ws3 = Math.sqrt(Math.pow(A, 2)+Math.pow(D, 2));
-        double ws4 = Math.sqrt(Math.pow(A, 2)+Math.pow(C, 2));
+        double ws1 = Math.sqrt(Math.pow(B, 2) + Math.pow(C, 2));
+        double ws2 = Math.sqrt(Math.pow(B, 2) + Math.pow(D, 2));
+        double ws3 = Math.sqrt(Math.pow(A, 2) + Math.pow(D, 2));
+        double ws4 = Math.sqrt(Math.pow(A, 2) + Math.pow(C, 2));
 
-        double wa1 = Math.atan2(B,C)*180/pi;
-        double wa2 = Math.atan2(B,D)*180/pi;
-        double wa3 = Math.atan2(A,D)*180/pi;
-        double wa4 = Math.atan2(A,C)*180/pi;
+        double wa1 = Math.atan2(B, C) * 180/pi;
+        double wa2 = Math.atan2(B, D) * 180/pi;
+        double wa3 = Math.atan2(A, D) * 180/pi;
+        double wa4 = Math.atan2(A, C) * 180/pi;
 
         double ws4a = 0;
         double ws1a = 0;
@@ -245,10 +256,10 @@ public class RobotConfig extends RobotHardwareMap
         double wa3a = 0;
         double wa4a = 0;
 
-        if(wa1 > 90 || wa1 <90) {ws1a = -1 * ws1;}
-        if(wa2 > 90 || wa2 <90) {ws2a = -1 * ws2;}
-        if(wa3 > 90 || wa3 <90) {ws3a = -1 * ws3;}
-        if(wa4 > 90 || wa4 <90) {ws4a = -1 * ws4;}
+        if(wa1 > 90 || wa1 < 90) {ws1a = -1 * ws1;}
+        if(wa2 > 90 || wa2 < 90) {ws2a = -1 * ws2;}
+        if(wa3 > 90 || wa3 < 90) {ws3a = -1 * ws3;}
+        if(wa4 > 90 || wa4 < 90) {ws4a = -1 * ws4;}
 
         if(wa1 > 90) {wa1a -= 180;} else if (wa1 < 90) {wa1a += 180;}
         if(wa2 > 90) {wa2a -= 180;} else if (wa2 < 90) {wa2a += 180;}
@@ -256,15 +267,15 @@ public class RobotConfig extends RobotHardwareMap
         if(wa4 > 90) {wa4a -= 180;} else if (wa4 < 90) {wa4a += 180;}
 
         double max = ws1;
-        if(ws2>max){max = ws2;}
-        if(ws3>max){max = ws3;}
-        if(ws4>max){max = ws4;}
+        if(ws2 > max){max = ws2;}
+        if(ws3 > max){max = ws3;}
+        if(ws4 > max){max = ws4;}
 
-        if(max>1){
-            ws1/=max;
-            ws2/=max;
-            ws3/=max;
-            ws4/=max;
+        if(max > 1){
+            ws1 /= max;
+            ws2 /= max;
+            ws3 /= max;
+            ws4 /= max;
         }
     }
 

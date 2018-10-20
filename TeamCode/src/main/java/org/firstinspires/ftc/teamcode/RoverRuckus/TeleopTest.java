@@ -52,27 +52,27 @@ public class TeleopTest extends OpMode
     public void loop() {
         if(gamepad1.right_bumper)
         {
-            angle = angle + adjustment;
+            angle += adjustment;
         }
         else if(gamepad1.left_bumper)
         {
-            angle = angle - adjustment;
+            angle -= adjustment;
         }
         else if(gamepad1.right_trigger > .25)
         {
-            adjustment = adjustment + 0.01;
+            adjustment += 0.01;
         }
         else if(gamepad1.left_trigger > 0.25)
         {
-            adjustment = adjustment - 0.01;
+            adjustment -= 0.01;
         }
         else if(gamepad1.a)
         {
-            adjustment = adjustment + 0.1;
+            adjustment += 0.1;
         }
         else if(gamepad1.b)
         {
-            adjustment = adjustment - 0.1;
+            adjustment -= 0.1;
         }
 
         angle = clip(angle, 0, 1);

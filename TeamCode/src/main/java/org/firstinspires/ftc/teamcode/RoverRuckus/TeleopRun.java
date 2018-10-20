@@ -17,15 +17,15 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class TeleopRun extends OpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    RobotConfig robot = new RobotConfig();
+    public RobotConfig robot = new RobotConfig();
 
-    FtcDashboard dashboard = FtcDashboard.getInstance();
-    TelemetryPacket packet = new TelemetryPacket();
-    TelemetryPacket.Adapter dashboardTelemetry = new TelemetryPacket.Adapter(dashboard);
+    public FtcDashboard dashboard = FtcDashboard.getInstance();
+    public TelemetryPacket packet = new TelemetryPacket();
+    public TelemetryPacket.Adapter dashboardTelemetry = new TelemetryPacket.Adapter(dashboard);
 
-    double LeftJoystickY = 0;
-    double LeftJoystickX = 0;
-    double RightJoystickX = 0;
+    public double LeftJoystickY = 0;
+    public double LeftJoystickX = 0;
+    public double RightJoystickX = 0;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -68,8 +68,11 @@ public class TeleopRun extends OpMode {
         LeftJoystickY = DashboardVariables.isVirtualJoystick() ? DashboardVariables.getVirtualLeftJoystickY() : gamepad1.left_stick_y;
         RightJoystickX = DashboardVariables.isVirtualJoystick() ? DashboardVariables.getVirtualRightJoystickX() : gamepad1.right_stick_x;
 
-        if (DashboardVariables.isFancySwerve()) {robot.FancySwerve(LeftJoystickY, LeftJoystickX, RightJoystickX);}
-        else {robot.SwerveDrive(LeftJoystickY, LeftJoystickX, RightJoystickX);}
+        if (DashboardVariables.isFancySwerve()) {
+            robot.FancySwerve(LeftJoystickY, LeftJoystickX, RightJoystickX);
+        } else {
+            robot.SwerveDrive(LeftJoystickY, LeftJoystickX, RightJoystickX);
+        }
 
         /**
          * Dashboard Values
