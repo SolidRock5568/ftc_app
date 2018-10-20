@@ -3,9 +3,7 @@ package org.firstinspires.ftc.teamcode.RoverRuckus;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 import static com.qualcomm.robotcore.util.Range.clip;
 
@@ -83,7 +81,7 @@ public class TeleopTest extends OpMode
         telemetry.addData("Angle: ", angle);
         telemetry.addData("Adjustment: ", adjustment);
         telemetry.update();
-        robot.SetServoPositions(angle);
+        robot.SetSwerveServoPositions(angle);
     }
 
     /*

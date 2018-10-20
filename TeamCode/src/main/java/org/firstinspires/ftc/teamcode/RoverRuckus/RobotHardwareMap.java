@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.RoverRuckus;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -33,9 +35,6 @@ public class RobotHardwareMap {
     public void init(HardwareMap ahwMap, Telemetry telemetry) {
         //Save a reference to Hardware map
         hwMap = ahwMap;
-
-        // Save a reference to Telemetry instance
-        this.telemetry = telemetry;
 
         // Get and initialize the motors
         FrontLeftMotor = initMotor("FrontLeftMotor", DcMotorSimple.Direction.FORWARD);
