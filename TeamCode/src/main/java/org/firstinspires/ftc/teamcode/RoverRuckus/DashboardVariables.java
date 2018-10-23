@@ -7,8 +7,8 @@ public class DashboardVariables {
     public static double VirtualLeftJoystickY = 0;
     public static double VirtualLeftJoystickX = 0;
     public static double VirtualRightJoystickX = 0;
-    public static boolean VirtualJoystick = true;
-    public static boolean FancySwerve = true;
+    public static boolean VirtualJoystick = false;
+    public static boolean FancySwerve = false;
 
     public static void setFancySwerve(boolean fancySwerve) {
         FancySwerve = fancySwerve;

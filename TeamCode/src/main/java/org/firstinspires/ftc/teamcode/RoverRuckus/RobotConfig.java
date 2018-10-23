@@ -212,60 +212,72 @@ public class RobotConfig extends RobotHardwareMap
     public void FancySwerve(double Power, double Strafe, double Steer){
         double pi = 3.141592653589793;
 
-        double FWD = -Power;
-        double STR = Strafe;
-        double RCW = Steer;
+        double ForwardPower = -Power;
+        double StrafeRightPower = Strafe;
+        double RotateClockWisePower = Steer;
 
-        double L = 10.8947877002801;
-        double W = 13.21;
-        double R = Math.sqrt(Math.pow(L, 2)+ Math.pow(W, 2));
+        double Length = 10.8947877002801;
+        double Width = 13.21;
+        double DiagonalDistance = Math.sqrt(Math.pow(Length, 2)+ Math.pow(Width, 2));
 
-        double A = STR - RCW*(L/R);
-        double B = STR + RCW*(L/R);
-        double C = FWD - RCW*(W/R);
-        double D = FWD + RCW*(W/R);
+        double A = StrafeRightPower - RotateClockWisePower*(Length/DiagonalDistance);
+        double B = StrafeRightPower + RotateClockWisePower*(Length/DiagonalDistance);
+        double C = ForwardPower - RotateClockWisePower*(Width/DiagonalDistance);
+        double D = ForwardPower + RotateClockWisePower*(Width/DiagonalDistance);
 
-        double ws1 = Math.sqrt(Math.pow(B, 2)+Math.pow(C, 2));
-        double ws2 = Math.sqrt(Math.pow(B, 2)+Math.pow(D, 2));
-        double ws3 = Math.sqrt(Math.pow(A, 2)+Math.pow(D, 2));
-        double ws4 = Math.sqrt(Math.pow(A, 2)+Math.pow(C, 2));
+        double FrontRightSpeed = Math.sqrt(Math.pow(B, 2)+Math.pow(C, 2));
+        double FrontLeftSpeed = Math.sqrt(Math.pow(B, 2)+Math.pow(D, 2));
+        double BackLeftSpeed = Math.sqrt(Math.pow(A, 2)+Math.pow(D, 2));
+        double BackRightSpeed = Math.sqrt(Math.pow(A, 2)+Math.pow(C, 2));
 
-        double wa1 = Math.atan2(B,C)*180/pi;
-        double wa2 = Math.atan2(B,D)*180/pi;
-        double wa3 = Math.atan2(A,D)*180/pi;
-        double wa4 = Math.atan2(A,C)*180/pi;
+        double FrontRightAngle = Math.atan2(B,C)*180/pi;
+        double FrontLeftAngle = Math.atan2(B,D)*180/pi;
+        double BackLeftAngle = Math.atan2(A,D)*180/pi;
+        double BackRightAngle = Math.atan2(A,C)*180/pi;
 
-        double ws4a = 0;
-        double ws1a = 0;
-        double ws2a = 0;
-        double ws3a = 0;
+        double FrontRightSpeedAdjusted = 0;
+        double FrontLeftSpeedAdjusted = 0;
+        double BackLeftSpeedAdjusted = 0;
+        double BackRightSpeedAdjusted = 0;
 
-        double wa1a = 0;
-        double wa2a = 0;
-        double wa3a = 0;
-        double wa4a = 0;
+        double FrontRightAngleAdjusted = 0;
+        double FrontLeftAngleAdjusted = 0;
+        double BackLeftAngleAdjusted = 0;
+        double BackRightAngleAdjusted = 0;
 
-        if(wa1 > 90 || wa1 <90) {ws1a = -1 * ws1;}
-        if(wa2 > 90 || wa2 <90) {ws2a = -1 * ws2;}
-        if(wa3 > 90 || wa3 <90) {ws3a = -1 * ws3;}
-        if(wa4 > 90 || wa4 <90) {ws4a = -1 * ws4;}
+        if(FrontRightAngle > 90 || FrontRightAngle <90) {FrontRightSpeedAdjusted = -1 * FrontRightSpeed;}
+        if(FrontLeftAngle > 90 || FrontLeftAngle <90) {FrontLeftSpeedAdjusted = -1 * FrontLeftSpeed;}
+        if(BackLeftAngle > 90 || BackLeftAngle <90) {BackLeftSpeedAdjusted = -1 * BackLeftSpeed;}
+        if(BackRightAngle > 90 || BackRightAngle <90) {BackRightSpeedAdjusted = -1 * BackRightSpeed;}
 
-        if(wa1 > 90) {wa1a -= 180;} else if (wa1 < 90) {wa1a += 180;}
-        if(wa2 > 90) {wa2a -= 180;} else if (wa2 < 90) {wa2a += 180;}
-        if(wa3 > 90) {wa3a -= 180;} else if (wa3 < 90) {wa3a += 180;}
-        if(wa4 > 90) {wa4a -= 180;} else if (wa4 < 90) {wa4a += 180;}
+        if(FrontRightAngle > 90) {FrontRightAngleAdjusted -= 180;} else if (FrontRightAngle < 90) {FrontRightAngleAdjusted += 180;}
+        if(FrontLeftAngle > 90) {FrontLeftAngleAdjusted -= 180;} else if (FrontLeftAngle < 90) {FrontLeftAngleAdjusted += 180;}
+        if(BackLeftAngle > 90) {BackLeftAngleAdjusted -= 180;} else if (BackLeftAngle < 90) {BackLeftAngleAdjusted += 180;}
+        if(BackRightAngle > 90) {BackRightAngleAdjusted -= 180;} else if (BackRightAngle < 90) {BackRightAngleAdjusted += 180;}
 
-        double max = ws1;
-        if(ws2>max){max = ws2;}
-        if(ws3>max){max = ws3;}
-        if(ws4>max){max = ws4;}
+        double max = FrontRightSpeed;
+        if(FrontLeftSpeed>max){max = FrontLeftSpeed;}
+        if(BackLeftSpeed>max){max = BackLeftSpeed;}
+        if(BackRightSpeed>max){max = BackRightSpeed;}
 
         if(max>1){
-            ws1/=max;
-            ws2/=max;
-            ws3/=max;
-            ws4/=max;
+            FrontRightSpeed/=max;
+            FrontLeftSpeed/=max;
+            BackLeftSpeed/=max;
+            BackRightSpeed/=max;
         }
+
+        //Set motor power
+        FrontLeftMotor.setPower(FrontLeftSpeedAdjusted);
+        FrontRightMotor.setPower(FrontRightSpeedAdjusted);
+        BackLeftMotor.setPower(BackLeftSpeedAdjusted);
+        BackRightMotor.setPower(BackRightSpeedAdjusted);
+
+        //Set Servo positions
+        FrontLeftServo.setPosition(UnScaleValue(ScaleValue(FrontRightAngleAdjusted, -90, 90), FrontLeftMin, FrontLeftMax));
+        FrontRightServo.setPosition(UnScaleValue(ScaleValue(FrontLeftAngleAdjusted, -90, 90), FrontRightMin, FrontRightMax));
+        BackLeftServo.setPosition(UnScaleValue(ScaleValue(BackLeftAngleAdjusted, -90, 90), BackLeftMin, BackLeftMax));
+        BackRightServo.setPosition(UnScaleValue(ScaleValue(BackRightAngleAdjusted, -90, 90), BackRightMin, BackRightMax));
     }
 
     /**
