@@ -222,7 +222,7 @@ public class RobotConfig extends RobotHardwareMap
 
     public void FancySwerve(double Power, double Strafe, double Steer){
         double pi = 3.141592653589793;
-        
+
         double ForwardPower = -Power;
         double StrafeRightPower = Strafe;
         double RotateClockWisePower = Steer;
