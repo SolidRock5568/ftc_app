@@ -68,8 +68,11 @@ public class TeleopRun extends OpMode {
         LeftJoystickY = DashboardVariables.isVirtualJoystick() ? DashboardVariables.getVirtualLeftJoystickY() : gamepad1.left_stick_y;
         RightJoystickX = DashboardVariables.isVirtualJoystick() ? DashboardVariables.getVirtualRightJoystickX() : gamepad1.right_stick_x;
 
-        if (DashboardVariables.isFancySwerve()) {robot.FancySwerve(LeftJoystickY, LeftJoystickX, RightJoystickX);}
-        else {robot.SwerveDrive(LeftJoystickY, LeftJoystickX, RightJoystickX);}
+        if (DashboardVariables.isFancySwerve()) {
+            robot.FancySwerve(LeftJoystickY, LeftJoystickX, RightJoystickX);
+        } else {
+            robot.SwerveDrive(LeftJoystickY, LeftJoystickX, RightJoystickX);
+        }
 
         /**
          * Dashboard Values

@@ -42,7 +42,7 @@ public class RobotConfig extends RobotHardwareMap
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
      * localization engine.
      */
-    VuforiaLocalizer vuforia;
+    public VuforiaLocalizer vuforia;
 
     //These are the value to use for each module to get that module to the zero degree
     public double FrontLeftMin = 0.05;
@@ -78,17 +78,25 @@ public class RobotConfig extends RobotHardwareMap
         // Load the data sets that for the trackable objects. These particular data
         // sets are stored in the 'assets' part of our application.
         targetsRoverRuckus = this.vuforia.loadTrackablesFromAsset("RoverRuckus");
+
+        // Gets and sets the name of the "Blue Rover" trackable
         VuforiaTrackable blueRover = targetsRoverRuckus.get(0);
         blueRover.setName("Blue-Rover");
+
+        // Gets and sets the name of the "Red Footprint" trackable
         VuforiaTrackable redFootprint = targetsRoverRuckus.get(1);
         redFootprint.setName("Red-Footprint");
+
+        // Gets and sets the name of the "Front Craters" trackable
         VuforiaTrackable frontCraters = targetsRoverRuckus.get(2);
         frontCraters.setName("Front-Craters");
+
+        // Gets and sets the name of the "Back Space" trackable
         VuforiaTrackable backSpace = targetsRoverRuckus.get(3);
         backSpace.setName("Back-Space");
 
         // For convenience, gather together all the trackable objects in one easily-iterable collection */
-        allTrackables = new ArrayList<VuforiaTrackable>();
+        allTrackables = new ArrayList<>();
         allTrackables.addAll(targetsRoverRuckus);
 
         OpenGLMatrix blueRoverLocationOnField = OpenGLMatrix
@@ -130,20 +138,23 @@ public class RobotConfig extends RobotHardwareMap
     public String VuforiaRun(){
         int counter = 0;
         String ReturnValue = "";
+        VuforiaTrackableDefaultListener trackableDefaultListener;
         targetsRoverRuckus.activate();
         if (counter <= 100) {
             // check all the trackable target to see which one (if any) is visible.
             targetVisible = false;
             for (VuforiaTrackable trackable : allTrackables) {
-                if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
+                trackableDefaultListener = (VuforiaTrackableDefaultListener)trackable.getListener();
+                if (trackableDefaultListener.isVisible()) {
                     targetVisible = true;
                     ReturnValue = trackable.getName();
                     // getUpdatedRobotLocation() will return null if no new information is available since
                     // the last time that call was made, or if the trackable is not currently visible.
-                    OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener) trackable.getListener()).getUpdatedRobotLocation();
+                    OpenGLMatrix robotLocationTransform = trackableDefaultListener.getUpdatedRobotLocation();
                     if (robotLocationTransform != null) {
                         lastLocation = robotLocationTransform;
                     }
+
                     break;
                 }
             }
@@ -211,7 +222,7 @@ public class RobotConfig extends RobotHardwareMap
 
     public void FancySwerve(double Power, double Strafe, double Steer){
         double pi = 3.141592653589793;
-
+        
         double ForwardPower = -Power;
         double StrafeRightPower = Strafe;
         double RotateClockWisePower = Steer;
