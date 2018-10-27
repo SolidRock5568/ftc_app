@@ -32,10 +32,10 @@ public class RobotHardwareMap {
     HardwareMap hwMap = null;
     Telemetry telemetry = null;
 
-    public void init(HardwareMap hwMap, Telemetry telemetry) {
+    public void init(HardwareMap ahwMap, Telemetry atelemetry) {
         //Save a reference to Hardware map
-        this.hwMap = hwMap;
-        this.telemetry = telemetry;
+        hwMap = ahwMap;
+        telemetry = atelemetry;
 
         // Get and initialize the motors
         FrontLeftMotor = initMotor("FrontLeftMotor", DcMotorSimple.Direction.FORWARD);
