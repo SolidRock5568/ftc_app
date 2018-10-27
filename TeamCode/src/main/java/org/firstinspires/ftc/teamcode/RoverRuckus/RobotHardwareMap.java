@@ -24,6 +24,7 @@ public class RobotHardwareMap {
     public Servo BackRightServo = null;
 
     public DcMotor InfeedMotor = null;
+    public DcMotor FlipMotor = null;
 
     public DcMotor LiftMotorOne = null;
     public DcMotor LiftMotorTwo = null;
@@ -47,6 +48,7 @@ public class RobotHardwareMap {
         LiftMotorTwo = initMotor("LiftMotorTwo", DcMotorSimple.Direction.FORWARD);
 
         InfeedMotor = initMotor("InfeedMotor", DcMotorSimple.Direction.FORWARD);
+        FlipMotor = initMotor("FlipMotor", DcMotorSimple.Direction.FORWARD);
 
         FrontLeftServo = initServo("FrontLeftServo", Direction.FORWARD);
         FrontRightServo = initServo("FrontRightServo", Direction.FORWARD);
