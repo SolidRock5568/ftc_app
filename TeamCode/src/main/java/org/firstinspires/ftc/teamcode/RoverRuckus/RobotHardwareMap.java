@@ -23,18 +23,19 @@ public class RobotHardwareMap {
     public Servo BackLeftServo = null;
     public Servo BackRightServo = null;
 
-    //public DcMotor InfeedMotor = null;
+    public DcMotor InfeedMotor = null;
 
-    //public DcMotor LiftMotorOne = null;
-    //public DcMotor LiftMotorTwo = null;
+    public DcMotor LiftMotorOne = null;
+    public DcMotor LiftMotorTwo = null;
 
     /* local members */
     HardwareMap hwMap = null;
     Telemetry telemetry = null;
 
-    public void init(HardwareMap ahwMap, Telemetry telemetry) {
+    public void init(HardwareMap hwMap, Telemetry telemetry) {
         //Save a reference to Hardware map
-        hwMap = ahwMap;
+        this.hwMap = hwMap;
+        this.telemetry = telemetry;
 
         // Get and initialize the motors
         FrontLeftMotor = initMotor("FrontLeftMotor", DcMotorSimple.Direction.FORWARD);
@@ -42,10 +43,10 @@ public class RobotHardwareMap {
         BackLeftMotor = initMotor("BackLeftMotor", DcMotorSimple.Direction.FORWARD);
         BackRightMotor = initMotor("BackRightMotor", DcMotorSimple.Direction.FORWARD);
 
-        //LiftMotorOne = initMotor("LiftMotorOne", DcMotorSimple.Direction.FORWARD);
-        //LiftMotorTwo = initMotor("LiftMotorTwo", DcMotorSimple.Direction.FORWARD);
+        LiftMotorOne = initMotor("LiftMotorOne", DcMotorSimple.Direction.REVERSE);
+        LiftMotorTwo = initMotor("LiftMotorTwo", DcMotorSimple.Direction.FORWARD);
 
-        //InfeedMotor = initMotor("InfeedMotor", DcMotorSimple.Direction.FORWARD);
+        InfeedMotor = initMotor("InfeedMotor", DcMotorSimple.Direction.FORWARD);
 
         FrontLeftServo = initServo("FrontLeftServo", Direction.FORWARD);
         FrontRightServo = initServo("FrontRightServo", Direction.FORWARD);
