@@ -45,15 +45,15 @@ public class RobotConfig extends RobotHardwareMap
     public VuforiaLocalizer vuforia;
 
     //These are the value to use for each module to get that module to the zero degree
-    public double FrontLeftMin = 0.05;
-    public double FrontRightMin = 0.02;
-    public double BackLeftMin = 0.01;
-    public double BackRightMin = 0.03;
+    public double FrontLeftMin = 0.04;
+    public double FrontRightMin = 0;
+    public double BackLeftMin = 0;
+    public double BackRightMin = 0.04;
 
-    public double FrontLeftMax = 0.69;
-    public double FrontRightMax = 0.76;
-    public double BackLeftMax = 0.70;
-    public double BackRightMax = 0.79;
+    public double FrontLeftMax = 0.7;
+    public double FrontRightMax = 0.73;
+    public double BackLeftMax = 0.71;
+    public double BackRightMax = 0.74;
 
     private VuforiaTrackables targetsRoverRuckus = null;
     private List<VuforiaTrackable> allTrackables = null;
@@ -140,7 +140,7 @@ public class RobotConfig extends RobotHardwareMap
         String ReturnValue = "";
         VuforiaTrackableDefaultListener trackableDefaultListener;
         targetsRoverRuckus.activate();
-        if (counter <= 100) {
+        while (counter <= 100 && ReturnValue != null) {
             // check all the trackable target to see which one (if any) is visible.
             targetVisible = false;
             for (VuforiaTrackable trackable : allTrackables) {
@@ -178,20 +178,43 @@ public class RobotConfig extends RobotHardwareMap
         return ReturnValue;
     }
 
-    public void dump() {
-        //raise lift
-        //flip over arm
+    public void raiseLift() {
+
+    }
+
+    public void flipArmUp(double Potentiometer) {
+        double Minimum = 1;
+        double Maximum = 3.29;
+        double MinimumPowerOffset = clip(1/(Maximum-Minimum), 0.05, 1);
+
+        while(Potentiometer < Maximum)
+        {
+            SetArmMotor(-1*((Potentiometer-Maximum)*MinimumPowerOffset));
+        }
+        if(Potentiometer >= Maximum)
+        {
+            SetArmMotor(0);
+        }
+    }
+
+    public void SetArmMotor(double power) {
+        FlipMotor.setPower(power);
+    }
+
+    public void dump(double potentiometer) {
+        raiseLift();
+        flipArmUp(potentiometer);
         //check colors
         //find positon with Vuforia
-        VuforiaRun();
+        //VuforiaRun();
         //flip out blocks/cubes
     }
 
     public void InitServos(){
-        FrontLeftServo.setPosition(FrontLeftMin);
-        FrontRightServo.setPosition(FrontRightMin);
-        BackLeftServo.setPosition(BackLeftMin);
-        BackRightServo.setPosition(BackRightMin);
+        FrontLeftServo.setPosition(/*(FrontLeftMax - FrontLeftMin)/2*/ 0);
+        FrontRightServo.setPosition(/*(FrontRightMax - FrontRightMin)/2*/ 0);
+        BackLeftServo.setPosition(/*(BackLeftMax - BackLeftMin)/2*/ 0);
+        BackRightServo.setPosition(/*(BackRightMax - BackRightMin)/2*/ 0);
     }
 
     public void KillMotors(){
@@ -318,7 +341,7 @@ public class RobotConfig extends RobotHardwareMap
     public void SetSwerveServoPositions(double angle) {
         //We first have to scale our input value (joystick from -1 to 1) to a value between
         //0 and 1
-        double scaledAngle = ScaleValue(angle, -1, 1);
+        double scaledAngle = ScaleValue(angle, -1 , 1);
 
         //Next we have to Unscale our 0 to 1 value to each servo's min to max value
         FrontLeftServo.setPosition(UnScaleValue(scaledAngle, FrontLeftMin, FrontLeftMax));
@@ -328,8 +351,8 @@ public class RobotConfig extends RobotHardwareMap
     }
 
     public void SetLiftMotors(double liftPower) {
-        //LiftMotorOne.setPower(liftPower);
-        //LiftMotorTwo.setPower(liftPower);
+        LiftMotorOne.setPower(liftPower);
+        LiftMotorTwo.setPower(liftPower);
     }
 
     public void SetDriveMotors(double drive) {

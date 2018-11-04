@@ -2,11 +2,14 @@ package org.firstinspires.ftc.teamcode.RoverRuckus;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.AnalogInputController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.Servo.Direction;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -33,10 +36,14 @@ public class RobotHardwareMap {
     HardwareMap hwMap = null;
     Telemetry telemetry = null;
 
+    AnalogInput ArmRotation;
+
     public void init(HardwareMap ahwMap, Telemetry atelemetry) {
         //Save a reference to Hardware map
         hwMap = ahwMap;
         telemetry = atelemetry;
+
+        ArmRotation = hwMap.analogInput.get("Arm Potentiometer");
 
         // Get and initialize the motors
         FrontLeftMotor = initMotor("FrontLeftMotor", DcMotorSimple.Direction.FORWARD);
@@ -44,17 +51,39 @@ public class RobotHardwareMap {
         BackLeftMotor = initMotor("BackLeftMotor", DcMotorSimple.Direction.FORWARD);
         BackRightMotor = initMotor("BackRightMotor", DcMotorSimple.Direction.FORWARD);
 
-        LiftMotorOne = initMotor("LiftMotorOne", DcMotorSimple.Direction.REVERSE);
-        LiftMotorTwo = initMotor("LiftMotorTwo", DcMotorSimple.Direction.FORWARD);
+        FrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BackLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BackRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        InfeedMotor = initMotor("InfeedMotor", DcMotorSimple.Direction.FORWARD);
-        FlipMotor = initMotor("FlipMotor", DcMotorSimple.Direction.FORWARD);
+        FrontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        FrontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        BackLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        BackRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        LiftMotorOne = initMotor("LiftMotorOne", DcMotorSimple.Direction.FORWARD);
+        LiftMotorTwo = initMotor("LiftMotorTwo", DcMotorSimple.Direction.REVERSE);
+
+        LiftMotorOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        LiftMotorTwo.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+//        LiftMotorOne.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        LiftMotorTwo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        LiftMotorOne.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        LiftMotorTwo.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+//        InfeedMotor = initMotor("InfeedMotor", DcMotorSimple.Direction.FORWARD);
+
+          FlipMotor = initMotor("FlipMotor", DcMotorSimple.Direction.FORWARD);
+
+          FlipMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+//        FlipMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         FrontLeftServo = initServo("FrontLeftServo", Direction.FORWARD);
         FrontRightServo = initServo("FrontRightServo", Direction.FORWARD);
         BackLeftServo = initServo("BackLeftServo", Direction.FORWARD);
         BackRightServo = initServo("BackRightServo", Direction.FORWARD);
-
     }
 
     public DcMotor initMotor(String hardwareName, DcMotorSimple.Direction direction) {

@@ -8,15 +8,13 @@ public class DashboardVariables {
     public static double VirtualLeftJoystickX = 0;
     public static double VirtualRightJoystickX = 0;
     public static boolean VirtualJoystick = false;
-    public static boolean FancySwerve = false;
+    public static int FancySwerve = 0;
 
-    public static void setFancySwerve(boolean fancySwerve) {
+    public static void setFancySwerve(int fancySwerve) {
         FancySwerve = fancySwerve;
     }
 
-    public static boolean isFancySwerve() {
-        return FancySwerve;
-    }
+    public static int getFancySwerve(){return FancySwerve;}
 
     public static void setVirtualLeftJoystickY(double virtualLeftJoystickY) {
         VirtualLeftJoystickY = virtualLeftJoystickY;
