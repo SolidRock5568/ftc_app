@@ -1,6 +1,16 @@
 package org.firstinspires.ftc.teamcode.RoverRuckus;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import com.disnodeteam.dogecv.CameraViewDisplay;
+import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
+import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
+import com.disnodeteam.dogecv.DogeCV;
+import com.disnodeteam.dogecv.Dogeforia;
+
+import java.lang.Math;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
@@ -9,11 +19,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.lang.Math;
-
 import static com.qualcomm.robotcore.util.Range.clip;
+
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
@@ -22,27 +29,28 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
 
 
+
 public class RobotConfig extends RobotHardwareMap
 {
     private static final String VUFORIA_KEY = "AUqb0l//////AAAAGevdjhGJj0rPhL7HPPOgXiMjObqiWrCOBJv2OvmyVIE1WTBpDt2ccEX7yWqDCZNRiMvT3ZeM/aA/Qx5Jpd1+8EraKY+8FD/uFVHJmMMwfkcYJkuIz3NzoVTdSc7c/3lwVmt7APWF/KAhoD6OPaoEjh1+gE17QlLkUoQNhlEEbbG3o2gjkyQf2xC+ZbXVehs0DF+ilZzliIa0NHNBSXutZaVmOzdbzJQNioxv9U+kf6P61pEy3aHvBPsqmRatPjzOeEN+/7NVyFJiDk2iakWxIrlTF0jUWl9zFBJcbXM+AwAaC57xY+txkzO8WFDR/ZQygDUajJKZQbfk+AbUj4yVMDCrX2bmrmZDAOFvrFtVFlqZ";
 
-    // Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
-    // We will define some constants and conversions here
     private static final float mmPerInch        = 25.4f;
     private static final float mmFTCFieldWidth  = (12*6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
     private static final float mmTargetHeight   = (6) * mmPerInch;          // the height of the center of the target image above the floor
 
+    // Select which camera you want use.  The FRONT camera is the one on the same side as the screen.
     // Valid choices are:  BACK or FRONT
     private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
 
+    // Vuforia variables
     private OpenGLMatrix lastLocation = null;
-    private boolean targetVisible = false;
+    boolean targetVisible;
+    Dogeforia vuforia;
+    List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
 
-    /**
-     * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
-     * localization engine.
-     */
-    public VuforiaLocalizer vuforia;
+    // DogeCV detector
+    GoldAlignDetector detector;
+    SamplingOrderDetector SamplingDetector;
 
     //These are the value to use for each module to get that module to the zero degree
     public double FrontLeftMin = 0.04;
@@ -55,48 +63,40 @@ public class RobotConfig extends RobotHardwareMap
     public double BackLeftMax = 0.71;
     public double BackRightMax = 0.74;
 
+    WebcamName SideCamera;
+    WebcamName FrontCamera;
+
     private VuforiaTrackables targetsRoverRuckus = null;
-    private List<VuforiaTrackable> allTrackables = null;
 
     public void VuforiaInit(){
-        /*
-         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
-         * We can pass Vuforia the handle to a camera preview resource (on the RC phone);
-         * If no camera monitor is desired, use the parameterless constructor instead (commented out below).
-         */
-        int cameraMonitorViewId = this.hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", this.hwMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        SideCamera = hwMap.get(WebcamName.class, "SideCamera");
 
-        // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+        // Set up parameters for Vuforia
+        int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
-        parameters.vuforiaLicenseKey = VUFORIA_KEY ;
-        parameters.cameraDirection   = CAMERA_CHOICE;
+        // Vuforia licence key
+        parameters.fillCameraMonitorViewParent = true;
 
-        //  Instantiate the Vuforia engine
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+        // Set camera name for Vuforia config
+        parameters.cameraName = SideCamera;
 
-        // Load the data sets that for the trackable objects. These particular data
-        // sets are stored in the 'assets' part of our application.
-        targetsRoverRuckus = this.vuforia.loadTrackablesFromAsset("RoverRuckus");
+        // Create Dogeforia object
+        vuforia = new Dogeforia(parameters);
+        vuforia.enableConvertFrameToBitmap();
 
-        // Gets and sets the name of the "Blue Rover" trackable
+        //Setup trackables
+        VuforiaTrackables targetsRoverRuckus = this.vuforia.loadTrackablesFromAsset("RoverRuckus");
         VuforiaTrackable blueRover = targetsRoverRuckus.get(0);
         blueRover.setName("Blue-Rover");
-
-        // Gets and sets the name of the "Red Footprint" trackable
         VuforiaTrackable redFootprint = targetsRoverRuckus.get(1);
         redFootprint.setName("Red-Footprint");
-
-        // Gets and sets the name of the "Front Craters" trackable
         VuforiaTrackable frontCraters = targetsRoverRuckus.get(2);
         frontCraters.setName("Front-Craters");
-
-        // Gets and sets the name of the "Back Space" trackable
         VuforiaTrackable backSpace = targetsRoverRuckus.get(3);
         backSpace.setName("Back-Space");
 
         // For convenience, gather together all the trackable objects in one easily-iterable collection */
-        allTrackables = new ArrayList<>();
         allTrackables.addAll(targetsRoverRuckus);
 
         OpenGLMatrix blueRoverLocationOnField = OpenGLMatrix
@@ -119,6 +119,7 @@ public class RobotConfig extends RobotHardwareMap
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, -90));
         backSpace.setLocation(backSpaceLocationOnField);
 
+
         final int CAMERA_FORWARD_DISPLACEMENT  = 110;   // eg: Camera is 110 mm in front of robot center
         final int CAMERA_VERTICAL_DISPLACEMENT = 200;   // eg: Camera is 200 mm above ground
         final int CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
@@ -128,54 +129,90 @@ public class RobotConfig extends RobotHardwareMap
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, YZX, DEGREES,
                         CAMERA_CHOICE == FRONT ? 90 : -90, 0, 0));
 
-        /**  Let all the trackable listeners know where the phone is.  */
         for (VuforiaTrackable trackable : allTrackables)
         {
             ((VuforiaTrackableDefaultListener)trackable.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
         }
+
+        // Activate the targets
+        targetsRoverRuckus.activate();
+
+        // Initialize the detector
+        detector = new GoldAlignDetector();
+        detector.init(hwMap.appContext,CameraViewDisplay.getInstance(), 0, true);
+        detector.useDefaults();
+        detector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
+        //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+        detector.downscale = 0.8;
+
+        // Set the detector
+        vuforia.setDogeCVDetector(detector);
+        vuforia.enableDogeCV();
+        vuforia.showDebug();
     }
 
     public String VuforiaRun(){
-        int counter = 0;
-        String ReturnValue = "";
-        VuforiaTrackableDefaultListener trackableDefaultListener;
-        targetsRoverRuckus.activate();
-        while (counter <= 100 && ReturnValue != null) {
-            // check all the trackable target to see which one (if any) is visible.
-            targetVisible = false;
-            for (VuforiaTrackable trackable : allTrackables) {
-                trackableDefaultListener = (VuforiaTrackableDefaultListener)trackable.getListener();
-                if (trackableDefaultListener.isVisible()) {
-                    targetVisible = true;
-                    ReturnValue = trackable.getName();
-                    // getUpdatedRobotLocation() will return null if no new information is available since
-                    // the last time that call was made, or if the trackable is not currently visible.
-                    OpenGLMatrix robotLocationTransform = trackableDefaultListener.getUpdatedRobotLocation();
-                    if (robotLocationTransform != null) {
-                        lastLocation = robotLocationTransform;
-                    }
+        String target = null;
+        vuforia.start();
+        targetVisible = false;
+        for (VuforiaTrackable trackable : allTrackables) {
+            if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
+                telemetry.addData("Visible Target", trackable.getName());
+                target = trackable.getName();
+                targetVisible = true;
 
-                    break;
+                // getUpdatedRobotLocation() will return null if no new information is available since
+                // the last time that call was made, or if the trackable is not currently visible.
+                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
+                if (robotLocationTransform != null) {
+                    lastLocation = robotLocationTransform;
                 }
+                break;
             }
-
-            // Provide feedback as to where the robot is located (if we know).
-            if (targetVisible) {
-                // express position (translation) of robot in inches.
-                VectorF translation = lastLocation.getTranslation();
-
-                float x = translation.get(0) / mmPerInch;
-                float y = translation.get(1) / mmPerInch;
-                float z = translation.get(2) / mmPerInch;
-
-                // express the rotation of the robot in degrees.
-                Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-            } else {
-                //return name
-            }
-            counter++;
         }
-        return ReturnValue;
+
+        // Provide feedback as to where the robot is located (if we know).
+        if (targetVisible) {
+            // express position (translation) of robot in inches.
+            VectorF translation = lastLocation.getTranslation();
+            telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
+                    translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
+
+            // express the rotation of the robot in degrees.
+            Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
+            telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+        }
+        else {
+            telemetry.addData("Visible Target", "none");
+        }
+        return target;
+    }
+
+    public String Sampling() {
+        String order = null;
+
+        // Setup detector
+        SamplingDetector = new SamplingOrderDetector(); // Create the detector
+        SamplingDetector.init(hwMap.appContext, CameraViewDisplay.getInstance(), 1, false); // Initialize detector with app context and camera
+        SamplingDetector.useDefaults(); // Set detector to use default settings
+
+        SamplingDetector.downscale = 0.4; // How much to downscale the input frames
+
+        // Optional tuning
+        SamplingDetector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
+        //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+        SamplingDetector.maxAreaScorer.weight = 0.001;
+
+        SamplingDetector.ratioScorer.weight = 15;
+        SamplingDetector.ratioScorer.perfectRatio = 1.0;
+
+        SamplingDetector.enable(); // Start detector
+        for(int k = 0; k < 1000; k++)
+        {
+            order = SamplingDetector.getCurrentOrder().toString();
+        }
+
+        return order;
     }
 
     public void raiseLift() {
