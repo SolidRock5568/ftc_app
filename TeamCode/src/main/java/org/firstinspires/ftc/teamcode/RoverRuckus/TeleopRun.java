@@ -26,6 +26,9 @@ public class TeleopRun extends OpMode {
     double LeftEncoder = 0;
     double RightEncoder = 0;
 
+    double BumpAmount = 1/180;
+    double CurrentAngle= 0;
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -71,28 +74,46 @@ public class TeleopRun extends OpMode {
 //        robot.FancySwerve(LeftJoystickY, LeftJoystickX, RightJoystickX);
 //        robot.SwerveDrive(-LeftJoystickY, LeftJoystickX, RightJoystickX);
 //
-        if (gamepad1.a)
-        {
-            robot.FrontLeftServo.setPosition(gamepad1.left_stick_x*.6);
-            robot.FrontRightServo.setPosition(gamepad1.left_stick_x*.6);
-            robot.BackLeftServo.setPosition(gamepad1.left_stick_x*.6);
-            robot.BackRightServo.setPosition(gamepad1.left_stick_x*.6);
-        }
-        else if(!gamepad1.a)
-        {
-            robot.FrontLeftServo.setPosition(0);
-            robot.FrontRightServo.setPosition(0);
-            robot.BackLeftServo.setPosition(0);
-            robot.BackRightServo.setPosition(0);
-        }
+//        if (gamepad1.a)
+//        {
+//            robot.FrontLeftServo.setPosition(gamepad1.left_stick_x*.6);
+//            robot.FrontRightServo.setPosition(gamepad1.left_stick_x*.6);
+//            robot.BackLeftServo.setPosition(gamepad1.left_stick_x*.6);
+//            robot.BackRightServo.setPosition(gamepad1.left_stick_x*.6);
+//        }
+//        else if(!gamepad1.a)
+//        {
+//            robot.FrontLeftServo.setPosition(0);
+//            robot.FrontRightServo.setPosition(0);
+//            robot.BackLeftServo.setPosition(0);
+//            robot.BackRightServo.setPosition(0);
+//        }
+//
+//        if (!gamepad2.a) {
+//            robot.SetLiftMotors(gamepad2.left_stick_y *.5);
+//        }
+//        else {
+//            robot.SetLiftMotors(gamepad2.left_stick_y);
+//        }
+        dashboardTelemetry.addData("Current Angle: ", CurrentAngle);
+        dashboardTelemetry.addData("Gamepad 2 dpad up: ", gamepad2.dpad_up);
 
-        if (!gamepad2.a) {
-            robot.SetLiftMotors(gamepad2.left_stick_y *.5);
-        }
-        else {
-            robot.SetLiftMotors(gamepad2.left_stick_y);
-        }
 
+        if (gamepad2.dpad_up)
+        {
+            robot.FrontLeftServo.setPosition(CurrentAngle);
+            robot.FrontRightServo.setPosition(CurrentAngle);
+            robot.BackLeftServo.setPosition(CurrentAngle);
+            robot.BackRightServo.setPosition(CurrentAngle);
+
+            CurrentAngle += BumpAmount;
+            try {
+                Thread.sleep(500);
+            }
+            catch (InterruptedException ex)
+            {}
+
+        }
         /**
          * Dashboard Values
          */
@@ -105,6 +126,7 @@ public class TeleopRun extends OpMode {
         dashboardTelemetry.addData("BR Unscaled Scaled Angle", robot.UnScaleValue(robot.ScaleValue(LeftJoystickX, -1, 1), robot.BackRightMin, robot.BackRightMax));
         dashboardTelemetry.addData("Encoder", robot.LiftMotorOne.getCurrentPosition());
         dashboardTelemetry.addData("Gamepad 1 A", gamepad1.a);
+        dashboardTelemetry.addData("Current Angle: ", CurrentAngle);
 //        packet.put("PacketAdapter", dashboardTelemetry);
         dashboardTelemetry.update();
     }
