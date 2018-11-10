@@ -32,7 +32,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 
 public class RobotConfig extends RobotHardwareMap
 {
-    private static final String VUFORIA_KEY = "AUqb0l//////AAAAGevdjhGJj0rPhL7HPPOgXiMjObqiWrCOBJv2OvmyVIE1WTBpDt2ccEX7yWqDCZNRiMvT3ZeM/aA/Qx5Jpd1+8EraKY+8FD/uFVHJmMMwfkcYJkuIz3NzoVTdSc7c/3lwVmt7APWF/KAhoD6OPaoEjh1+gE17QlLkUoQNhlEEbbG3o2gjkyQf2xC+ZbXVehs0DF+ilZzliIa0NHNBSXutZaVmOzdbzJQNioxv9U+kf6P61pEy3aHvBPsqmRatPjzOeEN+/7NVyFJiDk2iakWxIrlTF0jUWl9zFBJcbXM+AwAaC57xY+txkzO8WFDR/ZQygDUajJKZQbfk+AbUj4yVMDCrX2bmrmZDAOFvrFtVFlqZ";
+    private static final String VUFORIA_KEY = "AfQigb7/////AAABmddi2zOiSUlWnJ1HxTdfpihGzx/EuBykt9fn2zw7u8Dj8G7oQqEaEASdTJ0BkbPoLgUOoAFGO5ryTjJQadE8/Urk0+wPQQlX8QGUPRmK8mDmSGD+VE1W+UJQ+YXTQt2SV3DphWfPKnJIFSvvcpJ85FY0VkvXcSEYTayvMjiyTbXu1IRpeLid+vZktEDSbwBucsseLUpSW42dIohPuR+nW1r+IXjxfWRKkQdnyBK5Xw8/sMKwrOpJZAkxp3Z1tPnmvgUzAoR6BqjGqMO5OgaKu0APd901cz11vV1aTvNMnDfG4X+01u1k8IVB7ONZI1Im6g3tgTugavD3SZhP4vn9XLOU9jVhLaJAXWrWQXqXfIDQ\n";
 
     private static final float mmPerInch        = 25.4f;
     private static final float mmFTCFieldWidth  = (12*6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
@@ -53,15 +53,13 @@ public class RobotConfig extends RobotHardwareMap
     SamplingOrderDetector SamplingDetector;
 
     //These are the value to use for each module to get that module to the zero degree
-    public double FrontLeftMin = 0.04;
-    public double FrontRightMin = 0;
-    public double BackLeftMin = 0;
-    public double BackRightMin = 0.04;
+    public double FrontLeftMax = 0.75;
+    public double FrontRightMax = 0.85;
 
-    public double FrontLeftMax = 0.7;
-    public double FrontRightMax = 0.73;
-    public double BackLeftMax = 0.71;
-    public double BackRightMax = 0.74;
+    public double FrontLeftMin = FrontLeftMax - 0.74;
+    public double FrontRightMin = FrontRightMax - 0.8;
+    public double BackLeftMin = BackLeftMax - 0.8;
+    public double BackRightMin = BackRightMax - 0.8;
 
     WebcamName SideCamera;
     WebcamName FrontCamera;
@@ -215,8 +213,13 @@ public class RobotConfig extends RobotHardwareMap
         return order;
     }
 
-    public void raiseLift() {
-
+    public void raiseLift(int target, int deadzone, double power) {
+        while(LiftMotorTwo.getCurrentPosition() > target - deadzone/2 || LiftMotorTwo.getCurrentPosition() < target + deadzone/2)
+        {
+            LiftMotorTwo.setTargetPosition(target);
+            LiftMotorTwo.setPower(power);
+            LiftMotorOne.setPower(LiftMotorTwo.getPower());
+        }
     }
 
     public void flipArmUp(double Potentiometer) {
@@ -239,7 +242,7 @@ public class RobotConfig extends RobotHardwareMap
     }
 
     public void dump(double potentiometer) {
-        raiseLift();
+        raiseLift(1500, 10, .5);
         flipArmUp(potentiometer);
         //check colors
         //find positon with Vuforia
@@ -248,10 +251,10 @@ public class RobotConfig extends RobotHardwareMap
     }
 
     public void InitServos(){
-        FrontLeftServo.setPosition(/*(FrontLeftMax - FrontLeftMin)/2*/ 0);
-        FrontRightServo.setPosition(/*(FrontRightMax - FrontRightMin)/2*/ 0);
-        BackLeftServo.setPosition(/*(BackLeftMax - BackLeftMin)/2*/ 0);
-        BackRightServo.setPosition(/*(BackRightMax - BackRightMin)/2*/ 0);
+        FrontLeftServo.setPosition(/*(FrontLeftMax - FrontLeftMin)/2*/ FrontLeftMin);
+        FrontRightServo.setPosition(/*(FrontRightMax - FrontRightMin)/2*/ FrontRightMin);
+        BackLeftServo.setPosition(/*(BackLeftMax - BackLeftMin)/2*/ BackLeftMin);
+        BackRightServo.setPosition(/*(BackRightMax - BackRightMin)/2*/ BackRightMin);
     }
 
     public void KillMotors(){
@@ -408,16 +411,15 @@ public class RobotConfig extends RobotHardwareMap
     }
 
     public void InfeedIn() {
-        //InfeedMotor.setPower(-1);
-    }
-
-    public void InfeedOut() {
-        //InfeedMotor.setPower(1);
+        InfeedMotor.setPower(-1);
     }
 
     public void InfeedStop() {
-        //InfeedMotor.setPower(0);
+        InfeedMotor.setPower(0);
     }
 
+    public void InfeedOut() {
+        InfeedMotor.setPower(1);
+    }
 
 }

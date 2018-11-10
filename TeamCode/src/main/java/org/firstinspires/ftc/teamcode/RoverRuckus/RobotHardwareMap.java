@@ -32,6 +32,10 @@ public class RobotHardwareMap {
     public DcMotor LiftMotorOne = null;
     public DcMotor LiftMotorTwo = null;
 
+    public Servo LeftDumpServo = null;
+    public Servo RightDumpServo = null;
+
+
     /* local members */
     HardwareMap hwMap = null;
     Telemetry telemetry = null;
@@ -48,7 +52,7 @@ public class RobotHardwareMap {
         // Get and initialize the motors
         FrontLeftMotor = initMotor("FrontLeftMotor", DcMotorSimple.Direction.FORWARD);
         FrontRightMotor = initMotor("FrontRightMotor", DcMotorSimple.Direction.FORWARD);
-        BackLeftMotor = initMotor("BackLeftMotor", DcMotorSimple.Direction.FORWARD);
+        BackLeftMotor = initMotor("BackLeftMotor", DcMotorSimple.Direction.REVERSE);
         BackRightMotor = initMotor("BackRightMotor", DcMotorSimple.Direction.FORWARD);
 
         FrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -61,8 +65,8 @@ public class RobotHardwareMap {
         BackLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         BackRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        LiftMotorOne = initMotor("LiftMotorOne", DcMotorSimple.Direction.FORWARD);
-        LiftMotorTwo = initMotor("LiftMotorTwo", DcMotorSimple.Direction.REVERSE);
+        LiftMotorOne = initMotor("LiftMotorOne", DcMotorSimple.Direction.REVERSE);
+        LiftMotorTwo = initMotor("LiftMotorTwo", DcMotorSimple.Direction.FORWARD);
 
         LiftMotorOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         LiftMotorTwo.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -72,7 +76,7 @@ public class RobotHardwareMap {
 //        LiftMotorOne.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //        LiftMotorTwo.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-//        InfeedMotor = initMotor("InfeedMotor", DcMotorSimple.Direction.FORWARD);
+          InfeedMotor = initMotor("InfeedMotor", DcMotorSimple.Direction.REVERSE);
 
           FlipMotor = initMotor("FlipMotor", DcMotorSimple.Direction.FORWARD);
 
@@ -84,6 +88,10 @@ public class RobotHardwareMap {
         FrontRightServo = initServo("FrontRightServo", Direction.FORWARD);
         BackLeftServo = initServo("BackLeftServo", Direction.FORWARD);
         BackRightServo = initServo("BackRightServo", Direction.FORWARD);
+
+        LeftDumpServo = initServo("LeftDumpServo", Direction.FORWARD);
+        RightDumpServo = initServo("RightDumpServo", Direction.FORWARD);
+
     }
 
     public DcMotor initMotor(String hardwareName, DcMotorSimple.Direction direction) {

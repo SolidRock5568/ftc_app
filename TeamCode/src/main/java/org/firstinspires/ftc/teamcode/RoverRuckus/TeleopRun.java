@@ -26,7 +26,7 @@ public class TeleopRun extends OpMode {
     double LeftEncoder = 0;
     double RightEncoder = 0;
 
-    double BumpAmount = 1/180;
+    double BumpAmount = 0;
     double CurrentAngle= 0;
 
     /*
@@ -39,6 +39,7 @@ public class TeleopRun extends OpMode {
         robot.KillMotors();
         //robot.VuforiaInit();
         //robot.UpdateTelemetry();
+        BumpAmount = 0.01;
     }
 
     /*
@@ -70,50 +71,78 @@ public class TeleopRun extends OpMode {
         LeftJoystickX = DashboardVariables.isVirtualJoystick() ? DashboardVariables.getVirtualLeftJoystickX() : gamepad1.left_stick_x;
         LeftJoystickY = DashboardVariables.isVirtualJoystick() ? DashboardVariables.getVirtualLeftJoystickY() : gamepad1.left_stick_y;
         RightJoystickX = DashboardVariables.isVirtualJoystick() ? DashboardVariables.getVirtualRightJoystickX() : gamepad1.right_stick_x;
-//
-//        robot.FancySwerve(LeftJoystickY, LeftJoystickX, RightJoystickX);
-//        robot.SwerveDrive(-LeftJoystickY, LeftJoystickX, RightJoystickX);
-//
-//        if (gamepad1.a)
-//        {
-//            robot.FrontLeftServo.setPosition(gamepad1.left_stick_x*.6);
-//            robot.FrontRightServo.setPosition(gamepad1.left_stick_x*.6);
-//            robot.BackLeftServo.setPosition(gamepad1.left_stick_x*.6);
-//            robot.BackRightServo.setPosition(gamepad1.left_stick_x*.6);
-//        }
-//        else if(!gamepad1.a)
-//        {
-//            robot.FrontLeftServo.setPosition(0);
-//            robot.FrontRightServo.setPosition(0);
-//            robot.BackLeftServo.setPosition(0);
-//            robot.BackRightServo.setPosition(0);
-//        }
-//
-//        if (!gamepad2.a) {
-//            robot.SetLiftMotors(gamepad2.left_stick_y *.5);
-//        }
-//        else {
-//            robot.SetLiftMotors(gamepad2.left_stick_y);
-//        }
-        dashboardTelemetry.addData("Current Angle: ", CurrentAngle);
-        dashboardTelemetry.addData("Gamepad 2 dpad up: ", gamepad2.dpad_up);
 
+        //robot.FancySwerve(LeftJoystickY, LeftJoystickX, RightJoystickX);
+        robot.SwerveDrive(-LeftJoystickY, LeftJoystickX, RightJoystickX);
 
-        if (gamepad2.dpad_up)
-        {
-            robot.FrontLeftServo.setPosition(CurrentAngle);
-            robot.FrontRightServo.setPosition(CurrentAngle);
-            robot.BackLeftServo.setPosition(CurrentAngle);
-            robot.BackRightServo.setPosition(CurrentAngle);
-
-            CurrentAngle += BumpAmount;
-            try {
-                Thread.sleep(500);
-            }
-            catch (InterruptedException ex)
-            {}
-
+        if (gamepad2.b) {
+            robot.LiftMotorOne.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.LiftMotorOne.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
+
+        if (!gamepad2.x)
+        {
+            robot.SetLiftMotors(gamepad2.left_stick_y *.5);
+        }
+        else
+        {
+            robot.SetLiftMotors(gamepad2.left_stick_y);
+        }
+
+        /*--------------------------------*/
+
+        if (gamepad2.right_stick_y > 0.1)
+        {
+            robot.SetArmMotor(gamepad2.right_stick_y);
+        }
+        else if (gamepad2.right_stick_y < -0.1)
+        {
+            robot.SetArmMotor(gamepad2.right_stick_y);
+        }
+        else
+        {
+            robot.SetArmMotor(0);
+        }
+
+        if (gamepad2.left_bumper) { robot.LeftDumpServo.setPosition(0); }
+        else if(!gamepad2.left_bumper) { robot.LeftDumpServo.setPosition(1); }
+
+        if (gamepad2.right_bumper) { robot.RightDumpServo.setPosition(1); }
+        else if(!gamepad2.right_bumper) { robot.RightDumpServo.setPosition(0); }
+
+        if (gamepad2.right_trigger > 0.05)
+        {
+            robot.InfeedIn();
+        }
+        else
+        {
+            robot.InfeedStop();
+        }
+
+
+
+//        dashboardTelemetry.addData("Current Angle: ", CurrentAngle);
+//        dashboardTelemetry.addData("Gamepad 2 dpad up: ", gamepad2.dpad_up);
+//        dashboardTelemetry.addData("Bump Amount: ", BumpAmount);
+
+
+
+//        if (gamepad2.dpad_up)
+//        {
+//            dashboardTelemetry.addData("Gamepad 2 pressed ", gamepad2.dpad_up);
+//            robot.FrontLeftServo.setPosition(CurrentAngle);
+//            robot.FrontRightServo.setPosition(CurrentAngle);
+//            robot.BackLeftServo.setPosition(CurrentAngle);
+//            robot.BackRightServo.setPosition(CurrentAngle);
+//
+//            CurrentAngle += BumpAmount;
+//            try {
+//                Thread.sleep(250);
+//            }
+//            catch (InterruptedException ex)
+//            {}
+//
+//        }
         /**
          * Dashboard Values
          */
