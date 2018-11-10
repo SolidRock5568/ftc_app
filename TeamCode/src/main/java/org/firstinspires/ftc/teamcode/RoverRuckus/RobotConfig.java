@@ -55,6 +55,8 @@ public class RobotConfig extends RobotHardwareMap
     //These are the value to use for each module to get that module to the zero degree
     public double FrontLeftMax = 0.75;
     public double FrontRightMax = 0.85;
+    public double BackLeftMax = 0.97;
+    public double BackRightMax = 0.86;
 
     public double FrontLeftMin = FrontLeftMax - 0.74;
     public double FrontRightMin = FrontRightMax - 0.8;
