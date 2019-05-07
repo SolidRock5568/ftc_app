@@ -82,7 +82,7 @@ public class TeleopRun extends OpMode {
 
         if (!gamepad2.x)
         {
-            robot.SetLiftMotors(gamepad2.left_stick_y *.5);
+            robot.SetLiftMotors(gamepad2.left_stick_y);
         }
         else
         {

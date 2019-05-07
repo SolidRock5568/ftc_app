@@ -280,8 +280,8 @@ public class RobotConfig extends RobotHardwareMap
     }
 
     public void SwerveDrive(double Power, double Strafe, double Steer){
-        SetLeftDriveMotors(-Power + Steer);
-        SetRightDriveMotors(-Power - Steer);
+        SetLeftDriveMotors(-Power - Steer);
+        SetRightDriveMotors(-Power + Steer);
         SetSwerveServoPositions(Strafe);
     }
 

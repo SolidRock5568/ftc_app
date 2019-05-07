@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.Servo.Direction;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -50,7 +51,7 @@ public class RobotHardwareMap {
         ArmRotation = hwMap.analogInput.get("Arm Potentiometer");
 
         // Get and initialize the motors
-        FrontLeftMotor = initMotor("FrontLeftMotor", DcMotorSimple.Direction.FORWARD);
+        FrontLeftMotor = initMotor("FrontLeftMotor", DcMotorSimple.Direction.REVERSE);
         FrontRightMotor = initMotor("FrontRightMotor", DcMotorSimple.Direction.FORWARD);
         BackLeftMotor = initMotor("BackLeftMotor", DcMotorSimple.Direction.REVERSE);
         BackRightMotor = initMotor("BackRightMotor", DcMotorSimple.Direction.FORWARD);
